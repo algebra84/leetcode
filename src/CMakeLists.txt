@@ -6,6 +6,8 @@ set(LEETCODE
     4Sum2
     3sumClosest
     sellStock
+    sellStock2
+    sellStock3
 )
 foreach(_leetcode ${LEETCODE})
 ADD_EXECUTABLE(${_leetcode} ${_leetcode}.cpp )
