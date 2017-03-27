@@ -8,6 +8,7 @@ set(LEETCODE
     sellStock
     sellStock2
     sellStock3
+    sellStock4
 )
 foreach(_leetcode ${LEETCODE})
 ADD_EXECUTABLE(${_leetcode} ${_leetcode}.cpp )
