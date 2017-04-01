@@ -12,26 +12,19 @@ int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
   int size = gas.size();
   if(size == 0)
     return -1;
-  vector<int> need(size, 0), avail(size, 0);
-  for(int i = 0;i != size; i++){
-    need[i] = cost[i] - gas[i];
-  }
-
+  int tank = 0, start = 0, total = 0;
   for(int i = 0; i != size; i++){
-    if(need[i] > 0)
-      continue;
-    int j = (i+size-1)%size;
-    int sum = 0;
-    while(j != i){
-      sum += need[j];
-      if(sum < 0)
-        sum = 0;
-      j = (j-1+size)%size;
+    tank = tank + gas[i] - cost[i];
+    if(tank < 0){
+      total += tank;
+      tank = 0;
+      start = i+1;
     }
-    if(sum+need[i] <= 0)
-      return i;
   }
-  return -1;
+  if(tank + total < 0)
+    return -1;
+  else
+    return start;
 }
 
 int main()
