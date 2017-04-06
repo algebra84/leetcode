@@ -23,5 +23,39 @@
 using namespace std;
 
 bool isMatch(string s, string p){
-  
+  int pat = -1, ss = -1;
+  int i=0,j=0;
+  while(i != s.size()){
+    if(j != p.size() && (s[i] == p[j] || p[j] == '?')){
+      j++;
+      i++;
+      continue;
+    }
+    if(j != p.size() && p[j] == '*'){
+      ss = i;
+      pat = j++;
+      continue;
+    }
+    if(pat != -1){
+      j = pat + 1;
+      i = ++ss;
+      continue;
+    }
+    return false;
+  }
+
+  while(j != p.size()){
+    if(p[j] == '*')
+      j++;
+    else
+      break;
+  }
+  if(j == p.size())
+    return true;
+  return false;
+}
+
+int main()
+{
+  cout<<isMatch("abc", "a*c")<<endl;
 }
