@@ -29,6 +29,8 @@ struct TreeNode {
 
 bool isSymmetric_1(deque<TreeNode*> ivec){
   deque<TreeNode* > visit;
+  if(!(ivec.size()))
+    return true;
   while(ivec.size()){
     if(ivec.front() == NULL && ivec.back() == NULL){
       ivec.pop_back();
@@ -50,6 +52,8 @@ bool isSymmetric_1(deque<TreeNode*> ivec){
   return isSymmetric_1(visit);
 }
 bool isSymmetric(TreeNode* root){
+  if(root == NULL)
+    return true;
   deque<TreeNode* > visit;
   visit.push_back(root->left);
   visit.push_back(root->right);
@@ -65,7 +69,7 @@ int main()
   TreeNode* p5 = new TreeNode(3);
   p1->left=p2;
   p1->right=p3;
-  p2->left=p4;
-  p3->right=p4;
+  p2->right=p4;
+  p3->right=p5;
   cout<<isSymmetric(p1)<<endl;
 }

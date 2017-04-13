@@ -38,41 +38,39 @@ vector<vector<int> > updateMatrix(vector<vector<int> >& matrix){
   int row = matrix.size();
   int col = matrix[0].size();
   int a[4][2]={{0,-1},{-1,0},{0,1},{1,0}};
-  vector<vector<int> > result(row, vector<int>(col, 0));
+  vector<vector<int> > result(row, vector<int>(col, -1));
+  vector<vector<bool> > visited(row, vector<bool>(col, false));
+  queue<pair<int,int> > unvisited;
   for(int i = 0; i != row; i++)
     for(int j = 0; j != col; j++){
-      vector<vector<bool> > visited(row,vector<bool>(col, false));
-      queue<pair<int, int> > unvisited;
-      unvisited.push(make_pair(i,j));
-      visited[i][j] = true;
-      pair<int, int> result_pair(-1,-1);
-      while(!unvisited.empty()){
-        pair<int, int> tmp=unvisited.front();
-        unvisited.pop();
-        if(matrix[tmp.first][tmp.second] == 0){
-          result_pair = tmp;
-          break;
-        }
-        for(int k = 0; k !=4; k++){
-          pair<int, int> adj;
-          adj.first = tmp.first + a[k][0];
-          adj.second = tmp.second + a[k][1];
-          if(adj.first >= 0 && adj.first < row
-             && adj.second >= 0 && adj.second < col
-             && !visited[adj.first][adj.second]){
-            unvisited.push(adj);
-            visited[adj.first][adj.second]=true;
-          }
-        }
+      if(matrix[i][j] == 0){
+        visited[i][j] = true;
+        result[i][j] = 0;
+        unvisited.push(make_pair(i, j));
       }
-      result[i][j] = abs(result_pair.first - i) + abs(result_pair.second - j);
     }
+  while(unvisited.size()){
+    pair<int, int> tmp = unvisited.front();
+    unvisited.pop();
+    for(int k = 0; k !=4; k++){
+      pair<int, int> adj;
+      adj.first = tmp.first + a[k][0];
+      adj.second = tmp.second + a[k][1];
+      if(adj.first >= 0 && adj.first < row
+         && adj.second >= 0 && adj.second < col
+         && !visited[adj.first][adj.second]){
+        unvisited.push(adj);
+        visited[adj.first][adj.second]=true;
+        result[adj.first][adj.second] = result[tmp.first][tmp.second] + 1;
+      }
+    }
+  }
   return result;
 }
 
 int main()
 {
-  int a[]={0,1,1,1,1};
+  int a[]={0,1,0,1,1};
   vector<int> array(a,a+5);
   vector<vector<int> > mat(5,array);
   vector<vector<int> > result = updateMatrix(mat);
