@@ -14,7 +14,27 @@
 #include<vector>
 #include<set>
 #include<iostream>
+#include <iterator>
+
 using namespace std;
 int countRangeSum(vector<int>& nums, int lower, int upper){
-  
+  multiset<long long> mymultiset;
+  long long sum = 0;
+  int res = 0;
+  mymultiset.insert(0);
+  for(int i = 0; i != nums.size(); i++){
+    sum += (long long)nums[i];
+    res += distance(mymultiset.lower_bound(sum - upper),
+                    mymultiset.upper_bound(sum - lower));
+    mymultiset.insert(sum);
+  }
+  return res;
 }
+
+int main()
+{
+  int a[] = {-2,5,-1};
+  vector<int> nums(a,a+3);
+  cout<<countRangeSum(nums,-2,2)<<endl;
+}
+
