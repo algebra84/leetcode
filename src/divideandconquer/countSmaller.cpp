@@ -13,25 +13,83 @@
 
 #include<vector>
 #include<iostream>
-#include<set>
+#include<map>
 using namespace std;
+vector<int> result;
+struct ListNode{
+  int val;
+  int index;
+  ListNode* next;
+  ListNode(int x, int id): val(x), index(id),next(NULL){}
+};
+ListNode* mergeSort(ListNode* head,int num){
+  if (num == 0 || num == 1)
+    return head;
+  int low = num/2;
+  int high = num - num/2;
+  ListNode* mid = head;
+  ListNode* prev = NULL;
+  for(int i = 0; i != low; i++){
+    prev = mid;
+    mid = mid->next;
+  }
+  prev->next = NULL;
+  ListNode* lowlist = mergeSort(head,low);
+  ListNode* highlist = mergeSort(mid, high);
+  ListNode* res = new ListNode(0,-1);
+  mid = res;
+  int j = 0;
+  while(lowlist != NULL || highlist != NULL){
+    if(lowlist == NULL){
+      mid->next = highlist;
+      break;
+    }
+    if(highlist == NULL){
+      mid->next = lowlist;
+      mid = mid->next;
+      result[lowlist->index] += (num - num/2);
+      lowlist = lowlist->next;
+      continue;
+    }
+    if(lowlist->val <= highlist->val){
+      mid->next = lowlist;
+      mid = mid->next;
+      result[lowlist->index] += j;
+      lowlist = lowlist->next;
+    }
+    else{
+      mid->next = highlist;
+      mid = mid->next;
+      highlist = highlist->next;
+      j++;
+    }
+  }
+  mid = res->next;
+  delete res;
+  return mid;
+}
 vector<int> countSmaller(vector<int>& nums) {
-  multiset<int> mset;
-  vector<int> result;
   int N = nums.size();
-  for(int i = N-1; i != -1; i--){
-    int tmp = nums[i];
-    multiset<int>::iterator it=mset.lower_bound(tmp);
-    result.insert(result.begin(),distance(mset.begin(),it));
-    mset.insert(tmp);
+  ListNode* head = new ListNode(-1,-1);
+  ListNode* cur = head;
+  for(int i = 0; i != N; i++){
+    cur->next = new ListNode(nums[i],i);
+    cur=cur->next;
+    result.push_back(0);
+  }
+  cur = mergeSort(head->next,N);
+  for(int i = 0; i != N; i++){
+    ListNode* tmp= cur;
+    cur = cur->next;
+    delete tmp;
   }
   return result;
 }
 
 int main()
 {
-  int a[]={5,2,6,1};
-  vector<int> nums(a,a+4);
+  int a[10000];
+  vector<int> nums(a,a+10000);
   vector<int> res = countSmaller(nums);
   for(int i = 0; i != res.size(); i++)
     cout<<res[i]<<endl;
