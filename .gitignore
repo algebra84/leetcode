@@ -3,6 +3,7 @@
 *.so
 *.out
 *~
+*.pyc
 bin/
 build/
 cmake-build-debug/
