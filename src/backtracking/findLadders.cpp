@@ -19,15 +19,12 @@ bool findLadders_1(unordered_set<string> &words1,
                    vector<string>& wList,
                    unordered_map<string,vector<string> > &nexts,
                    unordered_map<string,int>& mmap,
-                   unordered_map<string,int>& dmap,
-                   bool word_is_begin,
-                   int* length){
+                   bool word_is_begin){
   bool flag1 = false;
-  bool flag2;
   if(!words1.size())
     return false;
   if(words1.size() > words2.size())
-    return findLadders_1(words2,words1,wList,nexts,mmap,dmap,!word_is_begin,length);
+    return findLadders_1(words2,words1,wList,nexts,mmap,!word_is_begin);
   unordered_set<string> words3;
   unordered_map<string,int> tmap;
   for(auto w1:words1){
@@ -36,18 +33,14 @@ bool findLadders_1(unordered_set<string> &words1,
         continue;
       if(ladder(wd,w1)){
         if(mmap[wd] != 0 && mmap[wd] != mmap[w1]){
-          if(dmap[wd] + dmap[w1] > *length)
-            return true;
           if(word_is_begin)
             nexts[w1].push_back(wd);
           else
             nexts[wd].push_back(w1);
-          *length = dmap[wd] + dmap[w1];
           flag1 = true;
         }
         else{
           tmap[wd] = mmap[w1];
-          dmap[wd] = dmap[w1]+1;
           words3.insert(wd);
           if(word_is_begin)
             nexts[w1].push_back(wd);
@@ -57,10 +50,11 @@ bool findLadders_1(unordered_set<string> &words1,
       }
     }
   }
+  if(flag1)
+    return true;
   for(auto tt:tmap)
     mmap[tt.first]=tt.second;
-  flag2 = findLadders_1(words3,words2,wList,nexts,mmap,dmap,word_is_begin,length);
-  return flag1 || flag2;
+  return findLadders_1(words3,words2,wList,nexts,mmap,word_is_begin);
 }
 
 void getPath(string& begin, string &end,
@@ -82,7 +76,6 @@ vector<vector<string> > findLadders(string beginWord, string endWord,
                                     vector<string>& wordList){
   vector<vector<string> > path;
   unordered_map<string,int> mmap;
-  unordered_map<string,int> dmap;
   vector<string> cand;
   int length = 100000000;
   unordered_map<string,vector<string> > nexts;
@@ -97,11 +90,9 @@ vector<vector<string> > findLadders(string beginWord, string endWord,
   words1.insert(beginWord);
   words2.insert(endWord);
   mmap[beginWord] = 1;
-  dmap[beginWord] = 1;
   mmap[endWord] = 2;
-  dmap[endWord] = 1;
   cand.push_back(beginWord);
-  if(findLadders_1(words1,words2,wordList,nexts,mmap,dmap,true,&length))
+  if(findLadders_1(words1,words2,wordList,nexts,mmap,true))
     getPath(beginWord,endWord,nexts,cand,path);
   return path;
 }
