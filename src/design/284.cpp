@@ -1,0 +1,56 @@
+/* 284. Peeking Iterator */
+#include<vector>
+using namespace std;
+// Below is the interface for Iterator, which is already defined for you.
+// **DO NOT** modify the interface for Iterator.
+class Iterator {
+  struct Data;
+	Data* data;
+public:
+	Iterator(const vector<int>& nums);
+	Iterator(const Iterator& iter);
+	virtual ~Iterator();
+	// Returns the next element in the iteration.
+	int next();
+	// Returns true if the iteration has more elements.
+	bool hasNext() const;
+};
+
+
+class PeekingIterator : public Iterator {
+public:
+	PeekingIterator(const vector<int>& nums) : Iterator(nums) {
+    // Initialize any member here.
+    // **DO NOT** save a copy of nums and manipulate it directly.
+    // You should only use the Iterator interface methods.
+    if(Iterator::hasNext()){
+      next_val=Iterator::next();
+      flag1 = true;
+    }
+	}
+
+  // Returns the next element in the iteration without advancing the iterator.
+	int peek() {
+    return next_val;
+	}
+
+	// hasNext() and next() should behave the same as in the Iterator interface.
+	// Override them if needed.
+	int next() {
+    int res = next_val;
+    if(Iterator::hasNext()){
+      flag1 = true;
+      next_val = Iterator::next();
+    }
+    else
+      flag1 = false;
+    return res;
+	}
+
+	bool hasNext() const {
+    return flag1;
+	}
+private:
+  int next_val;
+  bool flag1;
+};
