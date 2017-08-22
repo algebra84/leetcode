@@ -24,16 +24,10 @@ bool isMatch_1(string s, int id1,
   if(id1 == s.size()){
     if(p[id2+1] != '*')
       return false;
-    int tmp = id2+1;
-    while(p[tmp]=='*'){
-      tmp++;
-    }
-    if(tmp == p.size())
-      return true;
-    return false;
+    return isMatch_1(s,id1,p,id2+2,mmap);
   }
   if(p[id2+1] != '*'){
-    if(p[id2] = '.')
+    if(p[id2] == '.')
       return isMatch_1(s,id1+1,p,id2+1,mmap);
     if(p[id2] == s[id1])
       return isMatch_1(s,id1+1,p,id2+1,mmap);
@@ -52,6 +46,7 @@ bool isMatch_1(string s, int id1,
       if(isMatch_1(s,i,p,tmp,mmap))
         return true;
     }
+    return false;
   }
   for(int i = id1; i != s.size()+1; i++)
     if(isMatch_1(s,i,p,tmp,mmap))
@@ -66,7 +61,6 @@ bool isMatch(string s, string p) {
 
 int main()
 {
-  cout<<isMatch("ab",".")<<endl;
-  cout<<isMatch("aab","c*a*b")<<endl;
+  cout<<isMatch("","c*c*")<<endl;
   return 1;
 }
