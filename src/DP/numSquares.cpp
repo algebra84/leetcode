@@ -1,7 +1,6 @@
 /* 279. Perfect Squares */
 #include<cmath>
 #include<iostream>
-#include<cstdbool>
 #include<map>
 
 using namespace std;
@@ -9,31 +8,32 @@ class Solution {
 public:
   map<int,int> dpmap;
   int numSquares(int n) {
+    if(dpmap.empty())
+      init(n);
     if(dpmap.count(n) > 0)
       return dpmap[n];
-    if(isSquare(n)){
-      dpmap.insert(std::pair<int, int>(n, 1));
-      return 1;
+    int res = n;
+    for(int i = (int)sqrt(n); i != 0; i--){
+      int rest = numSquares(n-i*i);
+      if(rest + 1 < res)
+        res = rest+1;
+      if(res == 2)
+        break;
     }
-    int res = n; 
-    for(int i = 1; i != n/2 + 1; i++){
-      int low = numSquares(i);
-      int high = numSquares(n-i);
-      if(low + high < n)
-        res = low + high;
-    }
-    dpmap.insert(std::pair<int, int>(n,res));
+    dpmap[n] = res;
     return res;
   }
-  bool isSquare(int n){
-    int r = sqrt(n);
-    return r*r == n;
+  void init(int n){
+    for(int i = 1; i != (int)sqrt(n) + 1; i++)
+      dpmap[i*i] = 1;
   }
-  Solution();
+  Solution(){}
 };
 
 int main()
 {
-  class p;
-  cout<<p.numSquares(13)<<endl;
+  Solution p;
+  for(int i = 7927; i != 7928; i++)
+    cout<<p.numSquares(i)<<",";
+  cout<<endl;
 }
